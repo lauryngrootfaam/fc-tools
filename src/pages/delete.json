@@ -1,0 +1,62 @@
+{
+    "limit": 10,
+    "page": 1,
+    "filter": [
+        {
+            "type": "equals",
+            "field": "product.parentId",
+            "value": null
+        },
+        {
+            "type": "equals",
+            "field": "product.active",
+            "value": false
+        },
+        {
+            "type": "multi",
+            "operator": "or",
+            "queries": [
+                {
+                    "type": "range",
+                    "field": "stock",
+                    "parameters": {
+                        "gte": 1
+                    }
+                },
+                {
+                    "type": "range",
+                    "field": "children.stock",
+                    "parameters": {
+                        "gte": 1
+                    }
+                }
+            ]
+        }
+    ],
+    "associations": {
+        "children": {},
+        "media": {}
+    },
+    "total-count-mode": 1
+
+
+    
+
+    [
+        {
+            "type": "product",
+            "id": "58477a9f3bb745e389b2d609e8cfd3cd"
+        },
+        {
+            "type": "product",
+            "id": "8cb99eab0f834ee799585b9de7448ce7"
+        },
+        {
+            "type": "product",
+            "id": "a8786ca55c474a07b9dd9770ed90f897"
+        },
+        {
+            "type": "product",
+            "id": "d028057f6c024046bcaa0e6c8713ebc3"
+        }
+    ]

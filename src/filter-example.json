@@ -1,0 +1,45 @@
+{
+    "page": 1,
+    "filter": [
+        {
+            "type": "equals",
+            "field": "product.parentId",
+            "value": null
+        },
+        {
+            "type": "equals",
+            "field": "product.active",
+            "value": false
+        },
+        {
+            "type": "multi",
+            "operator": "or",
+            "queries": [
+                {
+                    "type": "range",
+                    "field": "stock",
+                    "parameters": {
+                        "gte": 1
+                    }
+                },
+                {
+                    "type": "range",
+                    "field": "children.stock",
+                    "parameters": {
+                        "gte": 1
+                    }
+                }
+            ]
+        }
+    ],
+    "associations": {
+        "children": {}
+    },
+    "includes": {
+        "product": [
+            "id",
+            "name"
+        ]
+    },
+    "total-count-mode": 1
+}
