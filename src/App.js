@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Route, Routes, Navigate, Outlet } from  'react-router-dom';
 import  Home  from './pages/Home';
 import  Login  from './pages/Login';
@@ -9,6 +9,7 @@ import PrivateRoute from "./utils/PrivateRoute";
 
 
 const App = () => {
+
   return (
     <>
      <Routes>
@@ -19,7 +20,6 @@ const App = () => {
       </Route>
       <Route path="/login" element={<Login />} />
       {/* <Route setToken={setToken} path="/login" element={<Login />} /> */}
-
     </Routes>
 </>
   );

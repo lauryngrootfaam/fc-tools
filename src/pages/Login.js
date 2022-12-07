@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import { useContext } from "react"
+import React, { useState, createContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
+import {UserContext} from '../UserContext'
+
 
 function Login() {
+  const {token, setToken} = useContext(UserContext);
+
+
   const navigate = useNavigate();
 
   const checkLogin = async (credentials) => {
+    
     const login = {
       client_id: "administration",
       grant_type: "password",
@@ -23,9 +30,8 @@ function Login() {
       }
     );
     const convertToken = await fetchToken.json();
-
-     localStorage.setItem("user", convertToken.access_token);
-     console.log(localStorage.getItem("user"));
+    console.log(convertToken)
+    setToken(convertToken)
   };
 
   const formik = useFormik({
@@ -36,16 +42,6 @@ function Login() {
 
     onSubmit: (values) => {
       checkLogin(values);
-
-      
-      if (localStorage.getItem("user")) {
-        navigate("/");
-         console.log("ga naar login")
-      } 
-      else {
-        navigate("/login");
-        console.log("ga naar home")
-      }
     },
   });
 
@@ -109,7 +105,7 @@ function Login() {
                             Password
                           </label>
                         </div>
-                        <button class="btn btn-primary btn-lg" type="submit">
+                        <button className="btn btn-primary btn-lg" type="submit">
                           Login
                         </button>
                       </form>
