@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
+import Navbar from "../Navbar";
 
 function Pac() {
   let [products, setProducts] = useState();
@@ -7,15 +8,15 @@ function Pac() {
   let [children, setChildren] = useState();
   let [eanNumbers, setEanNumbers] = useState();
 
-  const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-    },
-    onSubmit: (values) => {
-      getProducts(values);
-    },
-  });
+  // const formik = useFormik({
+  //   initialValues: {
+  //     email: "",
+  //     password: "",
+  //   },
+  //   onSubmit: (values) => {
+  //     getProducts(values);
+  //   },
+  // });
 
   const body = {
     page: 1,
@@ -107,6 +108,7 @@ function Pac() {
       password: credentials.password,
     };
 
+    //fetch token
     const fetchToken = await fetch(
       "https://www.freshcotton.com/api/oauth/token",
       {
@@ -115,7 +117,10 @@ function Pac() {
         body: JSON.stringify(login),
       }
     );
+
     const convertToken = await fetchToken.json();
+
+    //fetch products
     const fetchProducts = await fetch(
       "https://www.freshcotton.com/api/search/product",
       {
@@ -129,6 +134,7 @@ function Pac() {
     );
     const convertProducts = await fetchProducts.json();
 
+    //fetch brands
     const fetchBrands = await fetch(
       "https://www.freshcotton.com/api/search/product-manufacturer",
       {
@@ -164,10 +170,12 @@ function Pac() {
 
     window.localStorage.setItem("token", convertToken.access_token);
   };
+ 
 
   return (
     <>
-      <form onSubmit={formik.handleSubmit}>
+    <Navbar />
+      {/* <form onSubmit={formik.handleSubmit}>
         <label htmlFor="email">Username</label>
         <input
           id="email"
@@ -185,11 +193,10 @@ function Pac() {
           value={formik.values.password}
         />
         <button type="submit">Submit</button>
-      </form>
-      <div>Pac</div>
+      </form> */}
 
       <div className="my-5 mx-3">
-        <h1>Product availability check</h1>
+        <h2>Product availability check</h2>
         <button className="btn btn-primary my-2">Export to cvs </button>
       </div>
 
@@ -249,7 +256,10 @@ function Pac() {
         </tbody>
       </table>
     </>
+
   );
+
 }
+
 
 export default Pac;

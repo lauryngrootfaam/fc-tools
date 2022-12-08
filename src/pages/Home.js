@@ -1,20 +1,15 @@
 import { useContext } from "react"
 import { Link } from "react-router-dom"
 import {UserContext} from '../UserContext'
+import Navbar from "../Navbar";
 
 
 function Home() {
   const {token, setToken} = useContext(UserContext);
   return (
     <>
-    <div>Home</div>
-
-    setToken
-    <ul>
-          {/* <li><Link to="/pac">Product availability check</Link></li> */}
-          <li><Link to="/login">Login</Link></li>
-    </ul>
-    <div className="container">
+    <Navbar />
+  <div className="container">
   <div className="row row-cols-1 row-cols-md-2 g-4">
     <div className="col">
     <Link to="/pac">

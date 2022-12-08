@@ -3,14 +3,14 @@ import React, { useState, createContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormik, validateYupSchema } from "formik";
 import {UserContext} from '../UserContext'
+import Navbar from "../Navbar";
 
 
 function Login() {
   const {token, setToken} = useContext(UserContext);
   const [error, setError] = useState()
-
+  
   const navigate = useNavigate();
-
   const checkLogin = async (credentials) => {
     
     const login = {
@@ -30,20 +30,22 @@ function Login() {
       }
     );
     const convertToken = await fetchToken.json();
-    // console.log(fetchToken.ok)
+    
     console.log(convertToken)
     setToken(convertToken)
 
    
     if (fetchToken.ok == false){
-      setError(() => 'false credenetials')
-      console.log("false credentials")
+      setError(() => <p className="text-danger text-center"><b>Error</b> Incorrect user credentials.</p>)
+
+
     }
     else {
-     console.log("true credentials")
-      setError(() => 'true credentials')
+      setError(() => <p className="text-center">Correct user credentials.</p>)
+      navigate("/")      
     }
   };
+
 
   const formik = useFormik({
     initialValues: {
@@ -58,8 +60,10 @@ function Login() {
   });
 
 
+
   return (
     <>
+      <Navbar />
       <section className="h-100  py-5 my-5">
         <div className="container py-5 h-100">
           <div className="row d-flex justify-content-center align-items-center h-100">
