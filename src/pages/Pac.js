@@ -1,6 +1,9 @@
 import React, { useState } from "react";
-import { useFormik } from "formik";
 import Navbar from "../Navbar";
+
+import {UserContext} from '../UserContext'
+import { useContext } from "react"
+
 
 function Pac() {
   let [products, setProducts] = useState();
@@ -8,15 +11,9 @@ function Pac() {
   let [children, setChildren] = useState();
   let [eanNumbers, setEanNumbers] = useState();
 
-  // const formik = useFormik({
-  //   initialValues: {
-  //     email: "",
-  //     password: "",
-  //   },
-  //   onSubmit: (values) => {
-  //     getProducts(values);
-  //   },
-  // });
+
+  const {getToken, token ,  setToken} = useContext(UserContext);
+  const {refreshToken, setRefreshToken} = useContext(UserContext);
 
   const body = {
     page: 1,
@@ -99,26 +96,7 @@ function Pac() {
     "total-count-mode": 1
 };
 
-  const getProducts = async (credentials) => {
-    const login = {
-      client_id: "administration",
-      grant_type: "password",
-      scopes: "write",
-      username: credentials.email,
-      password: credentials.password,
-    };
-
-    //fetch token
-    const fetchToken = await fetch(
-      "https://www.freshcotton.com/api/oauth/token",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(login),
-      }
-    );
-
-    const convertToken = await fetchToken.json();
+  const getProducts = async (credentials) => {;
 
     //fetch products
     const fetchProducts = await fetch(
@@ -127,7 +105,7 @@ function Pac() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${convertToken.access_token}`,
+          Authorization: `Bearer ${getToken}`,
         },
         body: JSON.stringify(body),
       }
@@ -141,7 +119,7 @@ function Pac() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${convertToken.access_token}`,
+          Authorization: `Bearer ${getToken}`,
         },
       }
     );
@@ -155,49 +133,31 @@ function Pac() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${convertToken.access_token}`,
+          Authorization: `Bearer ${getToken}`,
         },
         body: JSON.stringify(eanBody),
       }
     );
     const convertEan = await fetchEan.json();
 
-
-  
     setProducts(() => convertProducts);
     setBrands(() => convertBrand);
     setEanNumbers(() => convertEan);
 
-    window.localStorage.setItem("token", convertToken.access_token);
   };
  
+  getProducts();
 
   return (
     <>
     <Navbar />
-      {/* <form onSubmit={formik.handleSubmit}>
-        <label htmlFor="email">Username</label>
-        <input
-          id="email"
-          name="email"
-          type="text"
-          onChange={formik.handleChange}
-          value={formik.values.email}
-        />
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          onChange={formik.handleChange}
-          value={formik.values.password}
-        />
-        <button type="submit">Submit</button>
-      </form> */}
+
+      <p>Token: {token}</p>
+      <p>Refresh Token: {refreshToken}</p>
 
       <div className="my-5 mx-3">
         <h2>Product availability check</h2>
-        <button className="btn btn-primary my-2">Export to cvs </button>
+        {/* <button className="btn btn-primary my-2">Export to cvs</button> */}
       </div>
 
       <table className="table  mx-3">
@@ -206,8 +166,6 @@ function Pac() {
             <th scope="col">ID</th>
             <th scope="col">Name</th>
             <th scope="col">Brand Name</th>
-            <th scope="col">Ean</th>
-            <th scope="col">Stock</th>
             <th scope="col">URL</th>
           </tr>
         </thead>
@@ -231,15 +189,6 @@ function Pac() {
                         )?.attributes.name
                       }
                     </td>
-                    <td>
-                      {
-                        eanNumbers.data.find(
-                          (eanNumber) => 
-                            product.id === eanNumber.id
-                            )?.attributes.productNumber                      
-                      }
-                    </td>
-                    <td>{product.attributes.stock}</td>
                     <td>
                       <a
                         target="_blank"

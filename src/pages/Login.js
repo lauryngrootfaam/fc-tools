@@ -1,18 +1,17 @@
-import { useContext } from "react"
-import React, { useState, createContext } from "react";
+import { useContext } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormik, validateYupSchema } from "formik";
-import {UserContext} from '../UserContext'
+import { UserContext } from "../UserContext";
 import Navbar from "../Navbar";
 
-
 function Login() {
-  const {token, setToken} = useContext(UserContext);
-  const [error, setError] = useState()
-  
+  const { getToken, token, setToken } = useContext(UserContext);
+  const { refreshToken, setRefreshToken } = useContext(UserContext);
+  const [error, setError] = useState();
+
   const navigate = useNavigate();
   const checkLogin = async (credentials) => {
-    
     const login = {
       client_id: "administration",
       grant_type: "password",
@@ -30,22 +29,26 @@ function Login() {
       }
     );
     const convertToken = await fetchToken.json();
-    
-    console.log(convertToken)
-    setToken(convertToken)
 
-   
-    if (fetchToken.ok == false){
-      setError(() => <p className="text-danger text-center"><b>Error</b> Incorrect user credentials.</p>)
+    console.log(convertToken.access_token);
+    setToken(convertToken.access_token);
 
+    console.log(convertToken.refresh_token);
+    console.log(convertToken);
+    setRefreshToken(convertToken.refresh_token);
+    // console.log("token: " + JSON.stringify(token))
 
-    }
-    else {
-      setError(() => <p className="text-center">Correct user credentials.</p>)
-      navigate("/")      
+    if (fetchToken.ok == false) {
+      setError(() => (
+        <p className="text-danger text-center">
+          <b>Error</b> Incorrect user credentials.
+        </p>
+      ));
+    } else {
+      setError(() => <p className="text-center">Correct user credentials.</p>);
+      // navigate("/")
     }
   };
-
 
   const formik = useFormik({
     initialValues: {
@@ -54,17 +57,33 @@ function Login() {
     },
 
     onSubmit: (values) => {
-      checkLogin(values);
+      getToken(values);
     },
-    
   });
 
+  async function refreshAuth() {
+    const body = {
+      grant_type: "refresh_token",
+      client_id: "administration",
+      refresh_token: { refreshToken },
+    };
 
+    const fetchNewToken = await fetch(
+      "https://www.freshcotton.com/api/oauth/token",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
+  }
 
   return (
     <>
+      {refreshToken}
       <Navbar />
       <section className="h-100  py-5 my-5">
+        { JSON.stringify(getToken())}
         <div className="container py-5 h-100">
           <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col-xl-10">
@@ -78,7 +97,7 @@ function Login() {
                   ></div>
                   <div className="col-lg-6">
                     <div className="card-body p-md-5 mx-md-4">
-                    { error }
+                      {error}
                       <div className="text-center">
                         <img
                           src="https://www.freshcotton.com/bundles/freshcotton/logo.svg?16674859312643"
@@ -123,7 +142,10 @@ function Login() {
                             Password
                           </label>
                         </div>
-                        <button className="btn btn-primary btn-lg" type="submit">
+                        <button
+                          className="btn btn-primary btn-lg"
+                          type="submit"
+                        >
                           Login
                         </button>
                       </form>
