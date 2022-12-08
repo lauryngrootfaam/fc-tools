@@ -1,13 +1,13 @@
 import { useContext } from "react"
 import React, { useState, createContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
+import { useFormik, validateYupSchema } from "formik";
 import {UserContext} from '../UserContext'
 
 
 function Login() {
   const {token, setToken} = useContext(UserContext);
-
+  const [error, setError] = useState()
 
   const navigate = useNavigate();
 
@@ -30,8 +30,19 @@ function Login() {
       }
     );
     const convertToken = await fetchToken.json();
+    // console.log(fetchToken.ok)
     console.log(convertToken)
     setToken(convertToken)
+
+   
+    if (fetchToken.ok == false){
+      setError(() => 'false credenetials')
+      console.log("false credentials")
+    }
+    else {
+     console.log("true credentials")
+      setError(() => 'true credentials')
+    }
   };
 
   const formik = useFormik({
@@ -43,7 +54,9 @@ function Login() {
     onSubmit: (values) => {
       checkLogin(values);
     },
+    
   });
+
 
   return (
     <>
@@ -61,6 +74,7 @@ function Login() {
                   ></div>
                   <div className="col-lg-6">
                     <div className="card-body p-md-5 mx-md-4">
+                    { error }
                       <div className="text-center">
                         <img
                           src="https://www.freshcotton.com/bundles/freshcotton/logo.svg?16674859312643"

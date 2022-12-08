@@ -20,5 +20,3 @@ const PrivateRoute = () => {
 }
 
 export default PrivateRoute
-
-// authorisation vs authentication
