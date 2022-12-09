@@ -5,10 +5,9 @@ import Navbar from "../Navbar";
 
 
 function Home() {
-  const {token, setToken} = useContext(UserContext);
+  const {token, setToken, getToken} = useContext(UserContext);
   return (
     <>
-    {token}
     <Navbar />
   <div className="container">
   <div className="row row-cols-1 row-cols-md-2 g-4">

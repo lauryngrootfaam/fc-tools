@@ -10,9 +10,9 @@ import { UserContext } from '../UserContext'
 
 
 const PrivateRoute = () => {
-  const {token} = useContext(UserContext);
+  const {token, getToken} = useContext(UserContext);
   
-    let auth = !!token.access_token;
+    let auth = !!token;
   return (
 
     auth ? <Outlet/> : <Navigate to="/login"/>

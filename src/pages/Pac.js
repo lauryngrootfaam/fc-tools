@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../Navbar";
 
 import {UserContext} from '../UserContext'
@@ -10,10 +10,11 @@ function Pac() {
   let [brands, setBrands] = useState();
   let [children, setChildren] = useState();
   let [eanNumbers, setEanNumbers] = useState();
+  const [feedback, setFeedback] = useState();
+  const [count, setCount] = useState(1);
 
 
-  const {getToken, token ,  setToken} = useContext(UserContext);
-  const {refreshToken, setRefreshToken} = useContext(UserContext);
+  const {getToken} = useContext(UserContext);
 
   const body = {
     page: 1,
@@ -105,7 +106,7 @@ function Pac() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken}`,
+          Authorization: `Bearer ${getToken()}`,
         },
         body: JSON.stringify(body),
       }
@@ -119,7 +120,7 @@ function Pac() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken}`,
+          Authorization: `Bearer ${getToken()}`,
         },
       }
     );
@@ -133,7 +134,7 @@ function Pac() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken}`,
+          Authorization: `Bearer ${getToken()}`,
         },
         body: JSON.stringify(eanBody),
       }
@@ -143,21 +144,38 @@ function Pac() {
     setProducts(() => convertProducts);
     setBrands(() => convertBrand);
     setEanNumbers(() => convertEan);
+    console.log("loaded list")
 
   };
+
+  useEffect(() => {
+    console.log(getToken())
+    getProducts();
+  },[])
  
-  getProducts();
+  async function refresh (){
+    await getProducts()
+    console.log("refresh")
+    setCount(count => count + 1)
+    setFeedback(()=>  "The list is refreshed (" + count + "x)")
+
+  }
+
+
+
 
   return (
     <>
     <Navbar />
 
-      <p>Token: {token}</p>
-      <p>Refresh Token: {refreshToken}</p>
+
+      {/* <p>Token: {getToken()}</p> */}
 
       <div className="my-5 mx-3">
         <h2>Product availability check</h2>
-        {/* <button className="btn btn-primary my-2">Export to cvs</button> */}
+        <button className="btn btn-primary m-2">Export to cvs</button>
+         <button onClick={refresh} className="btn btn-success m-2">Refresh List</button> 
+         {feedback}
       </div>
 
       <table className="table  mx-3">
@@ -176,6 +194,7 @@ function Pac() {
               
               return (
                 <>
+
                 <pre>{JSON.stringify(children)}</pre>
                   <div className="my5"></div>
                   <tr>
