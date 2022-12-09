@@ -7,7 +7,6 @@ import Navbar from "../Navbar";
 
 function Login() {
   const { getToken, token, setToken, refreshToken, setRefreshToken, error, setError} = useContext(UserContext);
-  // const [error, setError] = useState();
 
   const navigate = useNavigate();
 
@@ -16,23 +15,16 @@ function Login() {
       email: "",
       password: "",
     },
-
     onSubmit: (values) => {
       getToken(values);
-      // navigate("/")
     },
   });
 
 
   return (
-    <>
-      {/* {refreshToken} */}
-     
+    <>     
       <Navbar />
       <section className="h-100  py-5 my-5">
-        {/* { JSON.stringify(token)}
-        -----
-        { JSON.stringify(getToken())} */}
         <div className="container py-5 h-100">
           <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col-xl-10">
@@ -46,7 +38,6 @@ function Login() {
                   ></div>
                   <div className="col-lg-6">
                     <div className="card-body p-md-5 mx-md-4">
-                      {/* {error} */}
                       <div className="text-center">
                         <img
                           src="https://www.freshcotton.com/bundles/freshcotton/logo.svg?16674859312643"
@@ -56,7 +47,6 @@ function Login() {
                         />
                         <h4 className="mt-1 mb-5 pb-1">Tools</h4>
                         {error && <div className="text-danger text-center">{ error }</div>}
-                        {/* {error} */}
                       </div>
                       <form onSubmit={formik.handleSubmit}>
                         <p>Please login to your account</p>

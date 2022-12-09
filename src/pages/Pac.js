@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../Navbar";
 
-import {UserContext} from '../UserContext'
-import { useContext } from "react"
-
+import { UserContext } from "../UserContext";
+import { useContext } from "react";
 
 function Pac() {
   let [products, setProducts] = useState();
@@ -13,8 +12,7 @@ function Pac() {
   const [feedback, setFeedback] = useState();
   const [count, setCount] = useState(1);
 
-
-  const {getToken} = useContext(UserContext);
+  const { getToken } = useContext(UserContext);
 
   const body = {
     page: 1,
@@ -52,7 +50,7 @@ function Pac() {
     ],
     associations: {
       children: {
-        includes: { 
+        includes: {
           product: ["id"],
         },
       },
@@ -65,40 +63,39 @@ function Pac() {
   };
 
   const eanBody = {
-    "page": 1,
-    "filter": [
-        {
-            "type": "equals",
-            "field": "product.active",
-            "value": false
-        },
-        {
-            "type": "multi",
-            "operator": "or",
-            "queries": [
-                {
-                    "type": "range",
-                    "field": "stock",
-                    "parameters": {
-                        "gte": 1
-                    }
-                }
-            ]
-        }
+    page: 1,
+    filter: [
+      {
+        type: "equals",
+        field: "product.active",
+        value: false,
+      },
+      {
+        type: "multi",
+        operator: "or",
+        queries: [
+          {
+            type: "range",
+            field: "stock",
+            parameters: {
+              gte: 1,
+            },
+          },
+        ],
+      },
     ],
-     "includes": {
-    "product": ["productNumber", "children", "name", "translated.name"]
-  },
-  "associations": {
-    "children": [],
-    "media": []
+    includes: {
+      product: ["productNumber", "children", "name", "translated.name"],
     },
-    "grouping": ["parentId"],
-    "total-count-mode": 1
-};
+    associations: {
+      children: [],
+      media: [],
+    },
+    grouping: ["parentId"],
+    "total-count-mode": 1,
+  };
 
-  const getProducts = async (credentials) => {;
-
+  const getProducts = async (credentials) => {
     //fetch products
     const fetchProducts = await fetch(
       "https://www.freshcotton.com/api/search/product",
@@ -126,7 +123,6 @@ function Pac() {
     );
     const convertBrand = await fetchBrands.json();
 
-
     //fetch ean numbers
     const fetchEan = await fetch(
       "https://www.freshcotton.com/api/search/product",
@@ -144,38 +140,19 @@ function Pac() {
     setProducts(() => convertProducts);
     setBrands(() => convertBrand);
     setEanNumbers(() => convertEan);
-    console.log("loaded list")
-
+    console.log("loaded list");
   };
 
   useEffect(() => {
-    console.log(getToken())
+    console.log(getToken());
     getProducts();
-  },[])
- 
-  async function refresh (){
-    await getProducts()
-    console.log("refresh")
-    setCount(count => count + 1)
-    setFeedback(()=>  "The list is refreshed (" + count + "x)")
-
-  }
-
-
-
+  }, []);
 
   return (
     <>
-    <Navbar />
-
-
-      {/* <p>Token: {getToken()}</p> */}
-
+      <Navbar />
       <div className="my-5 mx-3">
         <h2>Product availability check</h2>
-        <button className="btn btn-primary m-2">Export to cvs</button>
-         <button onClick={refresh} className="btn btn-success m-2">Refresh List</button> 
-         {feedback}
       </div>
 
       <table className="table  mx-3">
@@ -190,12 +167,9 @@ function Pac() {
         <tbody>
           {products &&
             products.data.map((product) => {
-
-              
               return (
                 <>
-
-                <pre>{JSON.stringify(children)}</pre>
+                  <pre>{JSON.stringify(children)}</pre>
                   <div className="my5"></div>
                   <tr>
                     <td>{product.id}</td>
@@ -224,10 +198,7 @@ function Pac() {
         </tbody>
       </table>
     </>
-
   );
-
 }
-
 
 export default Pac;

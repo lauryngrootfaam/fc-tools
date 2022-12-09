@@ -5,9 +5,6 @@ import  Login  from './pages/Login';
 import  Pac  from './pages/Pac';
 import PrivateRoute from "./utils/PrivateRoute";
 
-// let [token, setToken ] = useState();
-
-
 const App = () => {
 
   return (
@@ -16,10 +13,8 @@ const App = () => {
       <Route element={<PrivateRoute/>}>
       <Route path="/" element={<Home />} />
       <Route path="/pac" element={<Pac />} />
-      {/* <Route  token={token} path="/pac" element={<Pac />} /> */}
       </Route>
       <Route path="/login" element={<Login />} />
-      {/* <Route setToken={setToken} path="/login" element={<Login />} /> */}
     </Routes>
 </>
   );
