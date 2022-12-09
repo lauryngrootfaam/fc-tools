@@ -37,5 +37,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@webpixels/css": "^1.2.3",
+    "bootstrap": "^5.2.3"
   }
 }

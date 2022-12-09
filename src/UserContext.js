@@ -11,6 +11,7 @@ const UserContextProvider = ({ children }) => {
   const navigate = useNavigate();
 
   function getToken(credentials) {
+    console.log(process.env)
     if (!token) {
       // fetch en setToken en return token
       const login = {
@@ -20,7 +21,7 @@ const UserContextProvider = ({ children }) => {
         username: credentials.email,
         password: credentials.password,
       };
-      fetch("https://www.freshcotton.com/api/oauth/token", {
+      fetch(`${process.env.REACT_APP_TOKEN_LINK}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(login),
@@ -45,7 +46,7 @@ const UserContextProvider = ({ children }) => {
         client_id: "administration",
         refresh_token: token.refreshToken,
       };
-      fetch("https://www.freshcotton.com/api/oauth/token", {
+      fetch(``, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

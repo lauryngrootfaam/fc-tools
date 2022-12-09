@@ -98,7 +98,7 @@ function Pac() {
   const getProducts = async (credentials) => {
     //fetch products
     const fetchProducts = await fetch(
-      "https://www.freshcotton.com/api/search/product",
+      `${process.env.REACT_APP_PRODUCT_LINK}`,
       {
         method: "POST",
         headers: {
@@ -112,7 +112,7 @@ function Pac() {
 
     //fetch brands
     const fetchBrands = await fetch(
-      "https://www.freshcotton.com/api/search/product-manufacturer",
+      `${process.env.REACT_APP_MANUFACTURER_LINK}`,
       {
         method: "POST",
         headers: {
@@ -125,7 +125,7 @@ function Pac() {
 
     //fetch ean numbers
     const fetchEan = await fetch(
-      "https://www.freshcotton.com/api/search/product",
+      `${process.env.REACT_APP_PRODUCT_LINK}`,
       {
         method: "POST",
         headers: {
